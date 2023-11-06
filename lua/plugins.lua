@@ -1,7 +1,6 @@
 return {
   'nvim-lua/popup.nvim',
   'MunifTanjim/nui.nvim',
-  'kyazdani42/nvim-web-devicons',
   'RRethy/vim-illuminate',
   'cohama/lexima.vim',
   'kana/vim-operator-user',
@@ -13,28 +12,43 @@ return {
   'tpope/vim-surround',
   'tpope/vim-repeat',
   'tpope/vim-commentary',
-  'AndrewRadev/switch.vim',
   'folke/neodev.nvim',
   'machakann/vim-highlightedyank',
-  'haya14busa/vim-asterisk',
-  'svermeulen/vim-macrobatics',
   'dhruvasagar/vim-table-mode',
   'nvim-treesitter/nvim-treesitter',
   'nvim-treesitter/nvim-treesitter-context',
   'vim-denops/denops.vim',
-  'skanehira/denops-germanium.vim',
   'rhysd/clever-f.vim',
-  "github/copilot.vim",
   {
-    "folke/twilight.nvim",
+  "ibhagwan/fzf-lua",
+    -- optional for icon support
+    dependencies = { "nvim-tree/nvim-web-devicons" },
     config = function()
-      require("twilight").setup {
-        -- your configuration comes here
-        -- or leave it empty to use the default settings
-        -- refer to the configuration section below
-      }
+      -- calling `setup` is optional for customization
+      require("fzf-lua").setup({})
     end
   },
+  {
+    "github/copilot.vim",
+    config = function()
+      vim.g.copilot_no_tab_map = true
+
+      local keymap = vim.keymap.set
+      -- https://github.com/orgs/community/discussions/29817#discussioncomment-4217615
+      keymap(
+        "i",
+        "<C-g>",
+        'copilot#Accept("<CR>")',
+        { silent = true, expr = true, script = true, replace_keycodes = false }
+      )
+      keymap("i", "<C-j>", "<Plug>(copilot-next)")
+      keymap("i", "<C-k>", "<Plug>(copilot-previous)")
+      keymap("i", "<C-o>", "<Plug>(copilot-dismiss)")
+      keymap("i", "<C-s>", "<Plug>(copilot-suggest)")
+
+    end
+  },
+  { 'kiran94/s3edit.nvim', config = true, cmd = "S3Edit"},
   {
     '0xAdk/full_visual_line.nvim',
     config = function ()
@@ -105,11 +119,9 @@ return {
   },
   {
    'stevearc/oil.nvim',
-    config = function()
+   config = function()
       require('oil').setup({
-        -- columns = {
-        --   "icon",
-        -- },
+        default_file_explorer = true,
         keymaps = {
           ["?"] = "actions.show_help",
           ["-"] = "actions.parent",
@@ -130,12 +142,6 @@ return {
       vim.keymap.set("n", "<leader>f", ':execute ":e" expand("%:h")<CR>', { noremap = true, silent = true })
     end
   },
-  -- {
-  --   'cocopon/vaffle.vim',
-  --   config = function()
-  --     vim.g.vaffle_show_hidden_files = 1
-  --   end,
-  -- },
   {
     'folke/noice.nvim',
     dependencies = {
@@ -163,38 +169,24 @@ return {
     lazy = false,
   },
   {
-    'nvim-telescope/telescope.nvim',
-    tag = '0.1.1',
-    dependencies = { 'nvim-lua/plenary.nvim' }
-  },
-  {
-    "nvim-telescope/telescope-frecency.nvim",
-    init = function()
-      require"telescope".load_extension("frecency")
-    end,
-    dependencies = {"kkharji/sqlite.lua"}
-  },
-  {
-    'nvim-telescope/telescope-media-files.nvim',
-    init = function()
-      require('telescope').load_extension('media_files')
-    end,
-  },
-  {
-    'stevearc/dressing.nvim',
-    event = "VeryLazy",
-  },
-  {
     'monaqa/dial.nvim',
     keys = { "<C-a>", { "<C-x>", mode = "n" } },
   },
   {
     'lukas-reineke/indent-blankline.nvim',
     init = function()
-      vim.opt.list = true
-
-      require("indent_blankline").setup {
-        show_end_of_line = true,
+      -- vim.opt.list = true
+      local highlight = {
+          "CursorColumn",
+          "Whitespace",
+      }
+      require("ibl").setup {
+          indent = { highlight = highlight, char = "" },
+          whitespace = {
+              highlight = highlight,
+              remove_blankline_trail = false,
+          },
+          scope = { enabled = false },
       }
     end,
   },
@@ -204,5 +196,53 @@ return {
       vim.o.timeout = true
       vim.o.timeoutlen = 300
     end,
+  },
+  {
+    'rainbowhxch/accelerated-jk.nvim',
+    config = function()
+      vim.api.nvim_set_keymap('n', 'j', '<Plug>(accelerated_jk_gj)', { silent = true })
+      vim.api.nvim_set_keymap('n', 'k', '<Plug>(accelerated_jk_gk)', { silent = true })
+    end,
+  },
+  {
+    "williamboman/mason.nvim",
+    build = ":MasonUpdate",
+    config = function()
+      require("mason").setup()
+    end,
+  },
+  {
+    'neovim/nvim-lspconfig',
+  },
+  {
+    "williamboman/mason-lspconfig.nvim",
+    dependencies = {
+      "williamboman/mason.nvim",
+      'neovim/nvim-lspconfig',
+    },
+    config = function()
+      local nvim_lsp = require("lspconfig")
+      local mason_lspconfig = require('mason-lspconfig')
+      mason_lspconfig.setup_handlers({
+        function(server_name)
+          local opts = {}
+          opts.on_attach = function(_, bufnr)
+            local bufopts = { silent = true, buffer = bufnr }
+          end
+          nvim_lsp[server_name].setup(opts)
+        end,
+      })
+      vim.keymap.set('n', 'gf', '<cmd>lua vim.lsp.buf.formatting()<CR>')
+      vim.keymap.set('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>')
+      vim.keymap.set('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>')
+      vim.keymap.set('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>')
+      vim.keymap.set('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>')
+      vim.keymap.set('n', 'gt', '<cmd>lua vim.lsp.buf.type_definition()<CR>')
+      vim.keymap.set('n', 'gn', '<cmd>lua vim.lsp.buf.rename()<CR>')
+      vim.keymap.set('n', 'ga', '<cmd>lua vim.lsp.buf.code_action()<CR>')
+      vim.keymap.set('n', 'ge', '<cmd>lua vim.diagnostic.open_float()<CR>')
+      vim.keymap.set('n', 'g]', '<cmd>lua vim.diagnostic.goto_next()<CR>')
+      vim.keymap.set('n', 'g[', '<cmd>lua vim.diagnostic.goto_prev()<CR>')
+    end
   },
 }
