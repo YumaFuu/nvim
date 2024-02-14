@@ -8,10 +8,11 @@ require('fzf-lua').setup({
   }
 })
 
-vim.keymap.set('n', '<leader>f', "<cmd>lua require('fzf-lua').files()<CR>")
+vim.keymap.set('n', '<leader>\'', "<cmd>lua require('fzf-lua').files()<CR>")
 vim.keymap.set('n', '<leader>s', "<cmd>lua require('fzf-lua').git_status()<CR>")
 vim.keymap.set('n', '<leader>g', "<cmd>lua require('fzf-lua').grep()<CR>")
 vim.keymap.set('n', '<leader>b', "<cmd>lua require('fzf-lua').blines()<CR>")
+
 vim.keymap.set('n', '<leader>r', "<cmd>lua require('fzf-lua').lsp_references()<CR>")
 vim.keymap.set('n', '<leader>d', "<cmd>lua require('fzf-lua').lsp_definitions()<CR>")
 vim.keymap.set('n', '<leader>D', "<cmd>lua require('fzf-lua').lsp_declarations()<CR>")

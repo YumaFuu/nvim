@@ -169,10 +169,6 @@ return {
     lazy = false,
   },
   {
-    'monaqa/dial.nvim',
-    keys = { "<C-a>", { "<C-x>", mode = "n" } },
-  },
-  {
     'lukas-reineke/indent-blankline.nvim',
     init = function()
       -- vim.opt.list = true

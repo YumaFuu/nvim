@@ -53,12 +53,10 @@ vim.g.clipboard = {
   cache_enabled = 0,
 }
 
-vim.api.nvim_exec([[
-  function! TrimWhitespace()
-    %s/\s\+$//e
-  endfunction
-  autocmd BufWritePre * call TrimWhitespace()
-]], true)
+vim.api.nvim_create_autocmd({ "BufWritePre" }, {
+  pattern = { "*" },
+  command = [[%s/\s\+$//e]],
+})
 
 maps = {
   n = {
@@ -71,11 +69,6 @@ maps = {
     ['k']          = 'gk',
     ['R']          = '<Plug>(operator-replace)',
     ['go']         = '<Plug>(openbrowser-smart-search)',
-    -- ["<Leader>'"]  = ':Telescope frecency workspace=CWD<CR>',
-    -- ["<Leader>\""]  = ':Telescope find_files<CR>',
-    -- ["<Leader>b"]  = ':Telescope buffers<CR>',
-    -- ["<Leader>a"]  = ':Telescope live_grep<CR>',
-    -- ["<C-g>"] = ':execute ":tabe" expand("%:h")<CR>:Telescope find_files<CR>',
     ["<C-[><C-[>"] = ':nohl<CR>',
     ["<ECS><ECS>"] = ':nohl<CR>',
     ['<Leader>c'] = '<plug>(operator-camelize-toggle)',
