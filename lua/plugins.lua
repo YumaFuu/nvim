@@ -78,6 +78,8 @@ return {
     config = function()
       local opts = { noremap = true, silent = true }
       local Terminal = require("toggleterm.terminal").Terminal
+
+      -- LazyDocker
       local lazydocker = Terminal:new({
         cmd = "lazydocker",
         -- dir = "git_dir",
@@ -95,9 +97,9 @@ return {
       function _toggleLazydockerTerminal()
         lazydocker:toggle()
       end
-
       vim.api.nvim_set_keymap("n", "<Space>d", "<cmd>lua _toggleLazydockerTerminal()<CR>", opts)
 
+      -- LazyGit
       local lazygit = Terminal:new({
         cmd = "lazygit",
         dir = "git_dir",
@@ -112,12 +114,30 @@ return {
           vim.api.nvim_buf_set_keymap(term.bufnr, "t", "<c-\\>", "<CMD>close<CR>", opts)
         end,
       })
-
       function _toggleLazygitTerminal()
         lazygit:toggle()
       end
-
       vim.api.nvim_set_keymap("n", "<c-\\>", "<cmd>lua _toggleLazygitTerminal()<CR>", opts)
+
+      -- Gh Dash
+      local ghDash = Terminal:new({
+        cmd = "gh dash",
+        dir = "git_dir",
+        direction = "float",
+        hidden = true,
+        close_on_exit = true,
+        float_opts = {
+          border = "curved",
+        },
+        on_open = function(term)
+          vim.cmd("startinsert!")
+          vim.api.nvim_buf_set_keymap(term.bufnr, "t", "<c-g>", "<CMD>close<CR>", opts)
+        end,
+      })
+      function _toggleGhDashTerminal()
+        ghDash:toggle()
+      end
+      vim.api.nvim_set_keymap("n", "<c-g>", "<cmd>lua _toggleGhDashTerminal()<CR>", opts)
     end
   },
   {
@@ -334,51 +354,108 @@ return {
     init = function() require('hlslens').setup() end,
   },
   {
-    'romgrk/barbar.nvim',
-    dependencies = {
-      'lewis6991/gitsigns.nvim', -- OPTIONAL: for git status
-      'nvim-tree/nvim-web-devicons', -- OPTIONAL: for file icons
-    },
-    init = function() vim.g.barbar_auto_setup = true end,
-    opts = {
-      -- animation = true,
-      -- insert_at_start = true,
-    },
-    version = '^1.0.0', -- optional: only update when a new 1.x version is released
+    'akinsho/bufferline.nvim',
+    version = "*",
+    dependencies = 'nvim-tree/nvim-web-devicons',
     config = function()
+      require('bufferline').setup {
+        options = {
+          separator_style = { '│', '│' },
+          always_show_bufferline = true,
+          show_buffer_close_icons = false,
+          show_close_icon = false,
+          show_tab_indicators = false,
+          color_icons = true,
+          indicator = {
+            style = 'none',
+          },
+          offsets = {
+            {
+              filetype = "NvimTree",
+              text = "File Explorer",
+              text_align = "left",
+              separator = false,
+            },
+          },
+        },
+        highlights = {
+          separator = {
+            guifg = '#073642',
+            guibg = '#002b36',
+          },
+          separator_selected = {
+            guifg = '#073642',
+          },
+          background = {
+            guifg = '#657b83',
+            guibg = '#002b36'
+          },
+          buffer_selected = {
+            guifg = '#fdf6e3',
+            gui = "bold",
+          },
+          fill = {
+            guibg = '#073642'
+          }
+        },
+      }
       local map = vim.api.nvim_set_keymap
       local opts = { noremap = true, silent = true }
-
       -- Move to previous/next
-      map('n', '<C-p>', '<Cmd>BufferPrevious<CR>', opts)
-      map('n', '<C-n>', '<Cmd>BufferNext<CR>', opts)
-      -- Re-order to previous/next
-      map('n', '<D-<>', '<Cmd>BufferMovePrevious<CR>', opts)
-      map('n', '<D->>', '<Cmd>BufferMoveNext<CR>', opts)
-      -- Goto buffer in position...
-      map('n', '<D-1>', '<Cmd>BufferGoto 1<CR>', opts)
-      map('n', '<D-2>', '<Cmd>BufferGoto 2<CR>', opts)
-      map('n', '<D-3>', '<Cmd>BufferGoto 3<CR>', opts)
-      map('n', '<D-4>', '<Cmd>BufferGoto 4<CR>', opts)
-      map('n', '<D-5>', '<Cmd>BufferGoto 5<CR>', opts)
-      map('n', '<D-6>', '<Cmd>BufferGoto 6<CR>', opts)
-      map('n', '<D-7>', '<Cmd>BufferGoto 7<CR>', opts)
-      map('n', '<D-8>', '<Cmd>BufferGoto 8<CR>', opts)
-      map('n', '<D-9>', '<Cmd>BufferGoto 9<CR>', opts)
-      map('n', '<D-0>', '<Cmd>BufferLast<CR>', opts)
-      -- Pin/unpin buffer
-      map('n', '<A-p>', '<Cmd>BufferPin<CR>', opts)
-      -- Close buffer
-      map('n', '<A-c>', '<Cmd>BufferClose<CR>', opts)
-      map('n', '<Space>bp', '<Cmd>BufferPick<CR>', opts)
-      -- Sort automatically by...
-      map('n', '<Space>bb', '<Cmd>BufferOrderByBufferNumber<CR>', opts)
-      map('n', '<Space>bn', '<Cmd>BufferOrderByName<CR>', opts)
-      map('n', '<Space>bd', '<Cmd>BufferOrderByDirectory<CR>', opts)
-      map('n', '<Space>bl', '<Cmd>BufferOrderByLanguage<CR>', opts)
-      map('n', '<Space>bw', '<Cmd>BufferOrderByWindowNumber<CR>', opts)
-    end
+      map('n', '<C-p>', '<Cmd>BufferLineCyclePrev<CR>', opts)
+      map('n', '<C-n>', '<Cmd>BufferLineCycleNext<CR>', opts)
+    end,
   },
+  -- {
+  --   'romgrk/barbar.nvim',
+  --   dependencies = {
+  --     'lewis6991/gitsigns.nvim', -- OPTIONAL: for git status
+  --     'nvim-tree/nvim-web-devicons', -- OPTIONAL: for file icons
+  --   },
+  --   init = function() vim.g.barbar_auto_setup = false end,
+  --   opts = {
+  --     animation = true,
+  --     insert_at_start = true,
+  --     maximum_padding = 4,
+  --     minimum_padding = 1,
+  --     maximum_length = 30,
+  --     minimum_length = 0,
+
+  --   },
+  --   version = '^1.0.0', -- optional: only update when a new 1.x version is released
+  --   config = function()
+  --     local map = vim.api.nvim_set_keymap
+  --     local opts = { noremap = true, silent = true }
+  --     -- Move to previous/next
+  --     map('n', '<C-p>', '<Cmd>BufferPrevious<CR>', opts)
+  --     map('n', '<C-n>', '<Cmd>BufferNext<CR>', opts)
+  --     -- Re-order to previous/next
+  --     map('n', '<D-<>', '<Cmd>BufferMovePrevious<CR>', opts)
+  --     map('n', '<D->>', '<Cmd>BufferMoveNext<CR>', opts)
+  --     -- Goto buffer in position...
+  --     map('n', '<D-1>', '<Cmd>BufferGoto 1<CR>', opts)
+  --     map('n', '<D-2>', '<Cmd>BufferGoto 2<CR>', opts)
+  --     map('n', '<D-3>', '<Cmd>BufferGoto 3<CR>', opts)
+  --     map('n', '<D-4>', '<Cmd>BufferGoto 4<CR>', opts)
+  --     map('n', '<D-5>', '<Cmd>BufferGoto 5<CR>', opts)
+  --     map('n', '<D-6>', '<Cmd>BufferGoto 6<CR>', opts)
+  --     map('n', '<D-7>', '<Cmd>BufferGoto 7<CR>', opts)
+  --     map('n', '<D-8>', '<Cmd>BufferGoto 8<CR>', opts)
+  --     map('n', '<D-9>', '<Cmd>BufferGoto 9<CR>', opts)
+  --     map('n', '<D-0>', '<Cmd>BufferLast<CR>', opts)
+  --     -- Pin/unpin buffer
+  --     map('n', '<A-p>', '<Cmd>BufferPin<CR>', opts)
+  --     -- Close buffer
+  --     map('n', '<A-c>', '<Cmd>BufferClose<CR>', opts)
+  --     map('n', '<Space>bp', '<Cmd>BufferPick<CR>', opts)
+  --     -- Sort automatically by...
+  --     map('n', '<Space>bb', '<Cmd>BufferOrderByBufferNumber<CR>', opts)
+  --     map('n', '<Space>bn', '<Cmd>BufferOrderByName<CR>', opts)
+  --     map('n', '<Space>bd', '<Cmd>BufferOrderByDirectory<CR>', opts)
+  --     map('n', '<Space>bl', '<Cmd>BufferOrderByLanguage<CR>', opts)
+  --     map('n', '<Space>bw', '<Cmd>BufferOrderByWindowNumber<CR>', opts)
+  --   end
+  -- },
   { 'kevinhwang91/nvim-bqf' },
   {
     'kazhala/close-buffers.nvim',

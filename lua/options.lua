@@ -59,18 +59,20 @@ vim.api.nvim_create_autocmd( 'bufwritepre', {
   callback = function() print('insert enter') end
 })
 
-vim.g.clipboard = {
-  name = 'lemonade',
-  copy = {
-    ['+'] = 'lemonade copy',
-    ['*'] = 'lemonade copy',
-  },
-  paste = {
-    ['+'] = 'lemonade paste',
-    ['*'] = 'lemonade paste',
-  },
-  cache_enabled = 0,
-}
+if vim.fn.has('linux') == 1 then
+  vim.g.clipboard = {
+    name = 'lemonade',
+    copy = {
+      ['+'] = 'lemonade copy',
+      ['*'] = 'lemonade copy',
+    },
+    paste = {
+      ['+'] = 'lemonade paste',
+      ['*'] = 'lemonade paste',
+    },
+    cache_enabled = 0,
+  }
+end
 
 vim.api.nvim_create_autocmd({ "BufWritePre" }, {
   pattern = { "*" },
