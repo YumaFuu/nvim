@@ -376,5 +376,8 @@ return {
   },
   {
     'sindrets/diffview.nvim',
-  }
+  },
+  {
+    'lambdalisue/guise.vim',
+  },
 }
