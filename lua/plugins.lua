@@ -24,7 +24,12 @@ return {
   {
     'lambdalisue/kensaku-search.vim',
     config = function()
-      vim.api.nvim_set_keymap('c', '<CR>', '<Plug>(kensaku-search-replace)<CR>', {noremap = true, silent = true})
+      vim.api.nvim_set_keymap(
+        'c',
+        '<CR>',
+        '<Plug>(kensaku-search-replace)<CR>',
+        {noremap = true, silent = true}
+      )
     end
   },
   {
@@ -145,10 +150,8 @@ return {
     end,
   },
   {
-    'rebelot/kanagawa.nvim',
-    config = function()
-      vim.cmd("colorscheme kanagawa")
-    end,
+    'rmehri01/onenord.nvim',
+    config = function() vim.cmd("colorscheme onenord") end,
   },
   -- {
   --   'savq/melange',
@@ -277,7 +280,38 @@ return {
       require('treesj').setup({--[[ your config ]]})
     end,
   },
-  { 'HiPhish/rainbow-delimiters.nvim' },
+  {
+    'HiPhish/rainbow-delimiters.nvim',
+    config = function()
+      -- This module contains a number of default definitions
+      local rainbow_delimiters = require 'rainbow-delimiters'
+
+      ---@type rainbow_delimiters.config
+      vim.g.rainbow_delimiters = {
+        strategy = {
+          [''] = rainbow_delimiters.strategy['global'],
+          vim = rainbow_delimiters.strategy['local'],
+        },
+        query = {
+          [''] = 'rainbow-delimiters',
+          lua = 'rainbow-blocks',
+        },
+        priority = {
+          [''] = 110,
+          lua = 210,
+        },
+        highlight = {
+          'RainbowDelimiterYellow',
+          'RainbowDelimiterBlue',
+          'RainbowDelimiterOrange',
+          'RainbowDelimiterRed',
+          'RainbowDelimiterGreen',
+          'RainbowDelimiterViolet',
+          'RainbowDelimiterCyan',
+        },
+      }
+    end,
+  },
   {
     'stevearc/overseer.nvim',
     opts = {},

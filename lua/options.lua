@@ -34,7 +34,7 @@ o.splitright = true
 o.foldtext = "FoldCCtext()"
 o.clipboard:append{'unnamedplus'}
 o.showtabline = 2
-o.cmdheight = 2
+o.cmdheight = 1
 o.laststatus = 3
 
 
