@@ -4,6 +4,7 @@ return {
   'RRethy/vim-illuminate',
   'cohama/lexima.vim',
   'kana/vim-operator-user',
+  "almo7aya/openingh.nvim",
   { 'kana/vim-operator-replace', dependencies = { 'kana/vim-operator-user' } },
   { 'tyru/operator-camelize.vim', dependencies = { 'kana/vim-operator-user' } },
   'kana/vim-textobj-user',
@@ -19,6 +20,13 @@ return {
   'nvim-treesitter/nvim-treesitter-context',
   'vim-denops/denops.vim',
   'rhysd/clever-f.vim',
+  'lambdalisue/kensaku.vim',
+  {
+    'lambdalisue/kensaku-search.vim',
+    config = function()
+      vim.api.nvim_set_keymap('c', '<CR>', '<Plug>(kensaku-search-replace)<CR>', {noremap = true, silent = true})
+    end
+  },
   {
   "ibhagwan/fzf-lua",
     -- optional for icon support
@@ -169,24 +177,6 @@ return {
     lazy = false,
   },
   {
-    'lukas-reineke/indent-blankline.nvim',
-    init = function()
-      -- vim.opt.list = true
-      local highlight = {
-          "CursorColumn",
-          "Whitespace",
-      }
-      require("ibl").setup {
-          indent = { highlight = highlight, char = "" },
-          whitespace = {
-              highlight = highlight,
-              remove_blankline_trail = false,
-          },
-          scope = { enabled = false },
-      }
-    end,
-  },
-  {
     'folke/which-key.nvim',
     config = function()
       vim.o.timeout = true
@@ -241,4 +231,136 @@ return {
       vim.keymap.set('n', 'g[', '<cmd>lua vim.diagnostic.goto_prev()<CR>')
     end
   },
+  {
+    "shellRaining/hlchunk.nvim",
+    event = { "UIEnter" },
+    config = function()
+      require("hlchunk").setup({})
+    end
+  },
+  {
+    'Wansmer/treesj',
+    keys = { '<space>m', '<space>j', '<space>s' },
+    dependencies = { 'nvim-treesitter/nvim-treesitter' },
+    config = function()
+      require('treesj').setup({--[[ your config ]]})
+    end,
+  },
+  { 'HiPhish/rainbow-delimiters.nvim' },
+  {
+    'stevearc/overseer.nvim',
+    opts = {},
+  },
+  { 'lewis6991/gitsigns.nvim' },
+  {
+    'kevinhwang91/nvim-hlslens',
+    init = function() require('hlslens').setup() end,
+  },
+  {
+    'romgrk/barbar.nvim',
+    dependencies = {
+      'lewis6991/gitsigns.nvim', -- OPTIONAL: for git status
+      'nvim-tree/nvim-web-devicons', -- OPTIONAL: for file icons
+    },
+    init = function() vim.g.barbar_auto_setup = true end,
+    opts = {
+      -- animation = true,
+      -- insert_at_start = true,
+    },
+    version = '^1.0.0', -- optional: only update when a new 1.x version is released
+    config = function()
+      local map = vim.api.nvim_set_keymap
+      local opts = { noremap = true, silent = true }
+
+      -- Move to previous/next
+      map('n', '<C-p>', '<Cmd>BufferPrevious<CR>', opts)
+      map('n', '<C-n>', '<Cmd>BufferNext<CR>', opts)
+      -- Re-order to previous/next
+      map('n', '<D-<>', '<Cmd>BufferMovePrevious<CR>', opts)
+      map('n', '<D->>', '<Cmd>BufferMoveNext<CR>', opts)
+      -- Goto buffer in position...
+      map('n', '<D-1>', '<Cmd>BufferGoto 1<CR>', opts)
+      map('n', '<D-2>', '<Cmd>BufferGoto 2<CR>', opts)
+      map('n', '<D-3>', '<Cmd>BufferGoto 3<CR>', opts)
+      map('n', '<D-4>', '<Cmd>BufferGoto 4<CR>', opts)
+      map('n', '<D-5>', '<Cmd>BufferGoto 5<CR>', opts)
+      map('n', '<D-6>', '<Cmd>BufferGoto 6<CR>', opts)
+      map('n', '<D-7>', '<Cmd>BufferGoto 7<CR>', opts)
+      map('n', '<D-8>', '<Cmd>BufferGoto 8<CR>', opts)
+      map('n', '<D-9>', '<Cmd>BufferGoto 9<CR>', opts)
+      map('n', '<D-0>', '<Cmd>BufferLast<CR>', opts)
+      -- Pin/unpin buffer
+      map('n', '<A-p>', '<Cmd>BufferPin<CR>', opts)
+      -- Close buffer
+      map('n', '<A-c>', '<Cmd>BufferClose<CR>', opts)
+      map('n', '<Space>bp', '<Cmd>BufferPick<CR>', opts)
+      -- Sort automatically by...
+      map('n', '<Space>bb', '<Cmd>BufferOrderByBufferNumber<CR>', opts)
+      map('n', '<Space>bn', '<Cmd>BufferOrderByName<CR>', opts)
+      map('n', '<Space>bd', '<Cmd>BufferOrderByDirectory<CR>', opts)
+      map('n', '<Space>bl', '<Cmd>BufferOrderByLanguage<CR>', opts)
+      map('n', '<Space>bw', '<Cmd>BufferOrderByWindowNumber<CR>', opts)
+    end
+  },
+  { 'kevinhwang91/nvim-bqf' },
+  {
+    'kazhala/close-buffers.nvim',
+    config = function()
+      local map = vim.api.nvim_set_keymap
+      local opts = { noremap = true, silent = true }
+
+      map(
+        'n',
+        '<leader>q',
+        "<cmd>BDelete this<CR>",
+        opts
+      )
+      map(
+        'n',
+        '<leader>o',
+        "<cmd>BDelete other<CR>",
+        opts
+      )
+    end
+  },
+  {
+    'b0o/incline.nvim',
+    config = function()
+      local helpers = require 'incline.helpers'
+      local devicons = require 'nvim-web-devicons'
+      require('incline').setup {
+        window = {
+          padding = 0,
+          margin = { horizontal = 0 },
+        },
+        render = function(props)
+          local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ':t')
+          if filename == '' then
+            filename = '[No Name]'
+          end
+          local ft_icon, ft_color = devicons.get_icon_color(filename)
+          local modified = vim.bo[props.buf].modified
+          return {
+            ft_icon and { ' ', ft_icon, ' ', guibg = ft_color, guifg = helpers.contrast_color(ft_color) } or '',
+            ' ',
+            { filename, gui = modified and 'bold,italic' or 'bold' },
+            ' ',
+            guibg = '#44406e',
+          }
+        end,
+      }
+    end
+  },
+  {
+    "linrongbin16/gitlinker.nvim",
+    cmd = "GitLink",
+    opts = {},
+    keys = {
+      { "<leader>gy", "<cmd>GitLink<cr>", mode = { "n", "v" }, desc = "Yank git link" },
+      { "<leader>gY", "<cmd>GitLink!<cr>", mode = { "n", "v" }, desc = "Open git link" },
+    },
+  },
+  {
+    'sindrets/diffview.nvim',
+  }
 }

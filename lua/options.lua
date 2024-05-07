@@ -1,38 +1,42 @@
-vim.opt.termguicolors = true
-vim.opt.confirm = true
-vim.opt.ts = 4
-vim.opt.backup = false
-vim.opt.swapfile = false
-vim.opt.compatible = false
-vim.opt.cursorline = true
-vim.opt.cursorcolumn = true
-vim.opt.smartindent = true
-vim.opt.showmatch = true
-vim.opt.laststatus = 2
-vim.opt.expandtab = true
-vim.opt.tabstop = 2
-vim.opt.shiftwidth = 2
-vim.opt.list = true
-vim.opt.listchars = {tab='▸-', trail='·', extends='»', precedes='«', nbsp='%'}
-vim.opt.fileformats = "unix,dos,mac"
-vim.opt.fileencodings = "utf-8,sjis"
-vim.opt.hlsearch = true
-vim.opt.ignorecase = true
-vim.opt.ruler = true
-vim.opt.autoread = true
-vim.opt.backspace = "indent,eol,start"
-vim.opt.exrc = true
-vim.opt.secure = true
-vim.opt.nu = true
-vim.opt.wildmenu = true
-vim.opt.wildmode = "full"
-vim.opt.encoding = 'UTF-8'
-vim.opt.splitbelow = true
-vim.opt.splitright = true
-vim.opt.foldtext = "FoldCCtext()"
-vim.opt.clipboard:append{'unnamedplus'}
-vim.opt.showtabline = 2
-vim.opt.cmdheight = 1
+local o = vim.opt
+
+o.termguicolors = true
+o.confirm = true
+o.ts = 4
+o.backup = false
+o.swapfile = false
+o.compatible = false
+o.cursorline = true
+o.cursorcolumn = true
+o.smartindent = true
+o.showmatch = true
+o.laststatus = 2
+o.expandtab = true
+o.tabstop = 2
+o.shiftwidth = 2
+o.list = true
+o.listchars = {tab='▸-', trail='·', extends='»', precedes='«', nbsp='%'}
+o.fileformats = "unix,dos,mac"
+o.fileencodings = "utf-8,sjis"
+o.hlsearch = true
+o.ignorecase = true
+o.ruler = true
+o.autoread = true
+o.backspace = "indent,eol,start"
+o.exrc = true
+o.secure = true
+o.nu = true
+o.wildmenu = true
+o.wildmode = "full"
+o.encoding = 'UTF-8'
+o.splitbelow = true
+o.splitright = true
+o.foldtext = "FoldCCtext()"
+o.clipboard:append{'unnamedplus'}
+o.showtabline = 2
+o.cmdheight = 1
+o.laststatus = 3
+
 
 vim.api.nvim_create_augroup( 'lua', {} )
 vim.api.nvim_create_autocmd( 'bufwritepre', {
@@ -61,10 +65,10 @@ vim.api.nvim_create_autocmd({ "BufWritePre" }, {
 maps = {
   n = {
     [';']          = ':',
-    ['te']         = ':execute ":tabe" expand("%:h")<CR>',
+    ['te']         = ':execute ":e" expand("%:h")<CR>',
     ['<C-[><C-[>'] = ':nohlsearch<CR><Esc>',
-    ['<C-n>']      = 'gt<CR>',
-    ['<C-p>']      = 'gT<CR>',
+    -- ['<C-n>']      = 'gt<CR>',
+    -- ['<C-p>']      = 'gT<CR>',
     ['j']          = 'gj',
     ['k']          = 'gk',
     ['R']          = '<Plug>(operator-replace)',
@@ -92,5 +96,3 @@ vim.keymap.set("n", "<C-a>", require("dial.map").inc_normal(), {noremap = true})
 vim.keymap.set("n", "<C-x>", require("dial.map").dec_normal(), {noremap = true})
 vim.keymap.set("v", "<C-a>", require("dial.map").inc_visual(), {noremap = true})
 vim.keymap.set("v", "<C-x>", require("dial.map").dec_visual(), {noremap = true})
-vim.keymap.set("v", "g<C-a>",require("dial.map").inc_gvisual(), {noremap = true})
-vim.keymap.set("v", "g<C-x>",require("dial.map").dec_gvisual(), {noremap = true})
