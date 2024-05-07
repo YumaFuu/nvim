@@ -34,9 +34,27 @@ o.splitright = true
 o.foldtext = "FoldCCtext()"
 o.clipboard:append{'unnamedplus'}
 o.showtabline = 2
-o.cmdheight = 1
+o.cmdheight = 2
 o.laststatus = 3
 
+
+local function add(value, str, sep)
+  sep = sep or ','
+  str = str or ''
+  value = type(value) == 'table' and table.concat(value, sep) or value
+  return str ~= '' and table.concat({ value, str }, sep) or value
+end
+
+o.fillchars = add {
+  'vert:▕', -- alternatives │
+  'fold: ',
+  'eob: ', -- suppress ~ at EndOfBuffer
+  'diff:─', -- alternatives: ⣿ ░
+  'msgsep:‾',
+  'foldopen:▾',
+  'foldsep:│',
+  'foldclose:▸'
+}
 
 vim.api.nvim_create_augroup( 'lua', {} )
 vim.api.nvim_create_autocmd( 'bufwritepre', {

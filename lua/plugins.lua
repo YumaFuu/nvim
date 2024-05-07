@@ -53,7 +53,6 @@ return {
       keymap("i", "<C-k>", "<Plug>(copilot-previous)")
       keymap("i", "<C-o>", "<Plug>(copilot-dismiss)")
       keymap("i", "<C-s>", "<Plug>(copilot-suggest)")
-
     end
   },
   { 'kiran94/s3edit.nvim', config = true, cmd = "S3Edit"},
@@ -75,16 +74,31 @@ return {
     config = function()
       local opts = { noremap = true, silent = true }
       local Terminal = require("toggleterm.terminal").Terminal
+      local lazydocker = Terminal:new({
+        cmd = "lazydocker",
+        -- dir = "git_dir",
+        direction = "float",
+        hidden = true,
+        close_on_exit = true,
+        float_opts = {
+          border = "double",
+        },
+        on_open = function(term)
+          vim.cmd("startinsert!")
+          vim.api.nvim_buf_set_keymap(term.bufnr, "t", "<Space>d", "<CMD>close<CR>", opts)
+        end,
+      })
+      function _toggleLazydockerTerminal()
+        lazydocker:toggle()
+      end
+
+      vim.api.nvim_set_keymap("n", "<Space>d", "<cmd>lua _toggleLazydockerTerminal()<CR>", opts)
+
       local lazygit = Terminal:new({
         cmd = "lazygit",
         dir = "git_dir",
         direction = "float",
         hidden = true,
-        -- hide_numbers = true,
-        -- shade_terminals = false,
-        -- start_in_insert = false,
-        -- persist_size = true,
-        direction = "float",
         close_on_exit = true,
         float_opts = {
           border = "double",
@@ -131,11 +145,17 @@ return {
     end,
   },
   {
-    'savq/melange',
+    'rebelot/kanagawa.nvim',
     config = function()
-      vim.cmd([[colorscheme melange]])
+      vim.cmd("colorscheme kanagawa")
     end,
   },
+  -- {
+  --   'savq/melange',
+  --   config = function()
+  --     vim.cmd([[colorscheme melange]])
+  --   end,
+  -- },
   {
    'stevearc/oil.nvim',
    config = function()
