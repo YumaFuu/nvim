@@ -268,7 +268,20 @@ return {
     "shellRaining/hlchunk.nvim",
     event = { "UIEnter" },
     config = function()
-      require("hlchunk").setup({})
+      require("hlchunk").setup({
+        chunk = {
+          style = {
+            { fg = "#39AEEE" },
+            { fg = "#1045FF" },
+          }
+        },
+        line_num = {
+          style = "#A4B0C2",
+        },
+        blank = {
+          enabled = true,
+        }
+      })
     end
   },
   {
