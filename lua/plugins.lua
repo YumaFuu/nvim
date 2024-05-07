@@ -17,19 +17,17 @@ return {
   'dhruvasagar/vim-table-mode',
   'nvim-treesitter/nvim-treesitter',
   'vim-denops/denops.vim',
-  -- 'rhysd/clever-f.vim',
+  'rhysd/clever-f.vim',
   {
     'ggandor/leap.nvim',
     config = function()
-      vim.keymap.set('n',        'f', '<Plug>(leap)')
-      vim.keymap.set('n',        'F', '<Plug>(leap-from-window)')
-      vim.keymap.set({'x', 'o'}, 'f', '<Plug>(leap-forward)')
-      vim.keymap.set({'x', 'o'}, 'F', '<Plug>(leap-backward)')
+      vim.keymap.set('n',        'm', '<Plug>(leap)')
+      vim.keymap.set('n',        'M', '<Plug>(leap-from-window)')
     end
   },
   {
     'mfussenegger/nvim-treehopper',
-    dependencies = { 'nvim-treesitter/nvim-treesitter' },
+    dependencies = { 'nvim-treesiter/nvim-treesitter' },
     config = function()
       vim.cmd([[
         omap     <silent> m :<C-U>lua require('tsht').nodes()<CR>
