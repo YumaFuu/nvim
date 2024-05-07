@@ -71,24 +71,38 @@ return {
   },
   {
     'akinsho/toggleterm.nvim',
+    dependencies = { 'xiyaowong/nvim-transparent' },
     version = "*",
     config = function()
-      require('toggleterm').setup {
-        open_mapping = [[<c-\>]],
+      local opts = { noremap = true, silent = true }
+      local Terminal = require("toggleterm.terminal").Terminal
+      local tigTerminal = Terminal:new({
+        cmd = "tig status",
+        dir = "git_dir",
+        direction = "float",
+        hidden = true,
         hide_numbers = true,
-        shade_terminals = true,
-        start_in_insert = true,
+        shade_terminals = false,
+        start_in_insert = false,
         persist_size = true,
         direction = "float",
         close_on_exit = true,
-        shell = vim.o.shell,
         winbar = {
-          enabled = false,
+          enabled = true,
           name_formatter = function(term) --  term: Terminal
             return term.name
           end
         },
-      }
+        on_open = function(term)
+          vim.api.nvim_buf_set_keymap(term.bufnr, "t", "<c-\\>", "<CMD>close<CR>", opts)
+        end,
+      })
+
+      function ToggleTigTerminal()
+        tigTerminal:toggle()
+      end
+
+      vim.api.nvim_set_keymap("n", "<c-\\>", "<cmd>lua ToggleTigTerminal()<CR>", opts)
     end
   },
   {
