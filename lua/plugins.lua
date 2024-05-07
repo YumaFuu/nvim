@@ -4,7 +4,6 @@ return {
   'RRethy/vim-illuminate',
   'cohama/lexima.vim',
   'kana/vim-operator-user',
-  "almo7aya/openingh.nvim",
   { 'kana/vim-operator-replace', dependencies = { 'kana/vim-operator-user' } },
   { 'tyru/operator-camelize.vim', dependencies = { 'kana/vim-operator-user' } },
   'kana/vim-textobj-user',
@@ -17,7 +16,7 @@ return {
   'machakann/vim-highlightedyank',
   'dhruvasagar/vim-table-mode',
   'nvim-treesitter/nvim-treesitter',
-  'nvim-treesitter/nvim-treesitter-context',
+  -- 'nvim-treesitter/nvim-treesitter-context',
   'vim-denops/denops.vim',
   'rhysd/clever-f.vim',
   'lambdalisue/kensaku.vim',
@@ -33,7 +32,7 @@ return {
     end
   },
   {
-  "ibhagwan/fzf-lua",
+    "ibhagwan/fzf-lua",
     -- optional for icon support
     dependencies = { "nvim-tree/nvim-web-devicons" },
     config = function()
@@ -63,7 +62,7 @@ return {
   { 'kiran94/s3edit.nvim', config = true, cmd = "S3Edit"},
   {
     '0xAdk/full_visual_line.nvim',
-    config = function ()
+    config = function()
       require 'full_visual_line'.setup {}
     end
   },
@@ -86,7 +85,7 @@ return {
         hidden = true,
         close_on_exit = true,
         float_opts = {
-          border = "double",
+          border = "curved",
         },
         on_open = function(term)
           vim.cmd("startinsert!")
@@ -106,7 +105,7 @@ return {
         hidden = true,
         close_on_exit = true,
         float_opts = {
-          border = "double",
+          border = "curved",
         },
         on_open = function(term)
           vim.cmd("startinsert!")
@@ -177,19 +176,23 @@ return {
         view_options = {
           show_hidden = true,
         },
+        columns = {
+          -- "icon",
+          -- "permissions",
+          -- "size",
+          -- "mtime",
+        },
       })
 
       vim.g.loaded_netrw = 1
       vim.g.loaded_netrwPlugin = 1
-      vim.keymap.set("n", "<leader>f", ':execute ":e" expand("%:h")<CR>', { noremap = true, silent = true })
+      vim.keymap.set(
+        "n",
+        "<leader>f",
+        ':execute ":e" expand("%:h")<CR>',
+        { noremap = true, silent = true }
+      )
     end
-  },
-  {
-    'folke/noice.nvim',
-    dependencies = {
-      'rcarriga/nvim-notify',
-      'MunifTanjim/nui.nvim',
-    },
   },
   {
     'tyru/open-browser.vim',
@@ -201,10 +204,6 @@ return {
         }
       }
     end
-  },
-  {
-    'tyru/open-browser-github.vim',
-    dependencies = { 'tyru/open-browser.vim' }
   },
   {
     'xiyaowong/nvim-transparent',
@@ -396,7 +395,7 @@ return {
       require('incline').setup {
         window = {
           padding = 0,
-          margin = { horizontal = 0 },
+          margin = { horizontal = 0, vertical = 2 },
         },
         render = function(props)
           local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ':t')

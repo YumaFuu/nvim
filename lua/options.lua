@@ -1,16 +1,24 @@
 local o = vim.opt
-
+o.fillchars = {
+  vert = '│',
+  vertleft  = '┤',
+  vertright = '├',
+  verthoriz = '┼',
+  horiz = '─',
+  horizup = '┴',
+  horizdown = '┬',
+  eob = ' ',
+}
 o.termguicolors = true
 o.confirm = true
 o.ts = 4
 o.backup = false
 o.swapfile = false
 o.compatible = false
-o.cursorline = true
-o.cursorcolumn = true
+o.cursorline = false
+o.cursorcolumn = false
 o.smartindent = true
 o.showmatch = true
-o.laststatus = 2
 o.expandtab = true
 o.tabstop = 2
 o.shiftwidth = 2
@@ -33,9 +41,8 @@ o.splitbelow = true
 o.splitright = true
 o.foldtext = "FoldCCtext()"
 o.clipboard:append{'unnamedplus'}
-o.showtabline = 2
-o.cmdheight = 1
 o.laststatus = 3
+o.cmdheight = 1
 
 
 local function add(value, str, sep)
@@ -45,16 +52,6 @@ local function add(value, str, sep)
   return str ~= '' and table.concat({ value, str }, sep) or value
 end
 
-o.fillchars = add {
-  'vert:▕', -- alternatives │
-  'fold: ',
-  'eob: ', -- suppress ~ at EndOfBuffer
-  'diff:─', -- alternatives: ⣿ ░
-  'msgsep:‾',
-  'foldopen:▾',
-  'foldsep:│',
-  'foldclose:▸'
-}
 
 vim.api.nvim_create_augroup( 'lua', {} )
 vim.api.nvim_create_autocmd( 'bufwritepre', {
