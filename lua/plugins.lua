@@ -16,9 +16,27 @@ return {
   'machakann/vim-highlightedyank',
   'dhruvasagar/vim-table-mode',
   'nvim-treesitter/nvim-treesitter',
-  -- 'nvim-treesitter/nvim-treesitter-context',
   'vim-denops/denops.vim',
-  'rhysd/clever-f.vim',
+  -- 'rhysd/clever-f.vim',
+  {
+    'ggandor/leap.nvim',
+    config = function()
+      vim.keymap.set('n',        'f', '<Plug>(leap)')
+      vim.keymap.set('n',        'F', '<Plug>(leap-from-window)')
+      vim.keymap.set({'x', 'o'}, 'f', '<Plug>(leap-forward)')
+      vim.keymap.set({'x', 'o'}, 'F', '<Plug>(leap-backward)')
+    end
+  },
+  {
+    'mfussenegger/nvim-treehopper',
+    dependencies = { 'nvim-treesitter/nvim-treesitter' },
+    config = function()
+      vim.cmd([[
+        omap     <silent> m :<C-U>lua require('tsht').nodes()<CR>
+        xnoremap <silent> m :lua require('tsht').nodes()<CR>
+      ]])
+    end
+  },
   'lambdalisue/kensaku.vim',
   {
     'lambdalisue/kensaku-search.vim',
@@ -335,11 +353,11 @@ return {
         highlight = {
           'RainbowDelimiterYellow',
           'RainbowDelimiterBlue',
-          'RainbowDelimiterOrange',
-          'RainbowDelimiterRed',
           'RainbowDelimiterGreen',
+          'RainbowDelimiterOrange',
           'RainbowDelimiterViolet',
           'RainbowDelimiterCyan',
+          'RainbowDelimiterRed',
         },
       }
     end,
@@ -388,15 +406,12 @@ return {
           },
           background = {
             guifg = '#657b83',
-            guibg = '#002b36'
+            guibg = '#303030'
           },
           buffer_selected = {
             guifg = '#fdf6e3',
             gui = "bold",
           },
-          fill = {
-            guibg = '#073642'
-          }
         },
       }
       local map = vim.api.nvim_set_keymap
