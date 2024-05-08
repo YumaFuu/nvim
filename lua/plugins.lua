@@ -4,10 +4,19 @@ return {
   'RRethy/vim-illuminate',
   'cohama/lexima.vim',
   'kana/vim-operator-user',
-  { 'kana/vim-operator-replace', dependencies = { 'kana/vim-operator-user' } },
-  { 'tyru/operator-camelize.vim', dependencies = { 'kana/vim-operator-user' } },
+  {
+    'kana/vim-operator-replace',
+    dependencies = { 'kana/vim-operator-user' },
+  },
+  {
+    'tyru/operator-camelize.vim',
+    dependencies = { 'kana/vim-operator-user' },
+  },
   'kana/vim-textobj-user',
-  { 'rhysd/vim-textobj-ruby', dependencies = { 'kana/vim-textobj-user' } },
+  {
+    'rhysd/vim-textobj-ruby',
+    dependencies = { 'kana/vim-textobj-user' },
+  },
   'simeji/winresizer',
   'tpope/vim-surround',
   'tpope/vim-repeat',
@@ -468,6 +477,8 @@ return {
   --   end
   -- },
   { 'kevinhwang91/nvim-bqf' },
+  { 'sindrets/diffview.nvim' },
+  { 'lambdalisue/guise.vim' },
   {
     'kazhala/close-buffers.nvim',
     config = function()
@@ -524,11 +535,5 @@ return {
         end,
       }
     end
-  },
-  {
-    'sindrets/diffview.nvim',
-  },
-  {
-    'lambdalisue/guise.vim',
   },
 }
