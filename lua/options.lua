@@ -1,4 +1,8 @@
 local o = vim.opt
+
+vim.cmd([[
+  hi NormalFloat guibg=#262626
+]])
 o.fillchars = {
   vert = '│',
   vertleft  = '┤',

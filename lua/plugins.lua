@@ -104,6 +104,17 @@ return {
       local opts = { noremap = true, silent = true }
       local Terminal = require("toggleterm.terminal").Terminal
 
+      local float_opts = { border = "curved" }
+      local highlights = {
+        Normal = {
+          guibg = "#262626",
+        },
+        FloatBorder = {
+          guifg = "#3A3A3A",
+          guibg = "#262626",
+        },
+      }
+
       -- LazyDocker
       local lazydocker = Terminal:new({
         cmd = "lazydocker",
@@ -111,9 +122,8 @@ return {
         direction = "float",
         hidden = true,
         close_on_exit = true,
-        float_opts = {
-          border = "curved",
-        },
+        float_opts = float_opts,
+        highlights = highlights,
         on_open = function(term)
           vim.cmd("startinsert!")
           vim.api.nvim_buf_set_keymap(term.bufnr, "t", "<Space>d", "<CMD>close<CR>", opts)
@@ -131,9 +141,8 @@ return {
         direction = "float",
         hidden = true,
         close_on_exit = true,
-        float_opts = {
-          border = "curved",
-        },
+        highlights = highlights,
+        float_opts = float_opts,
         on_open = function(term)
           vim.cmd("startinsert!")
           vim.api.nvim_buf_set_keymap(term.bufnr, "t", "<c-\\>", "<CMD>close<CR>", opts)
@@ -151,9 +160,8 @@ return {
         direction = "float",
         hidden = true,
         close_on_exit = true,
-        float_opts = {
-          border = "curved",
-        },
+        float_opts = float_opts,
+        highlights = highlights,
         on_open = function(term)
           vim.cmd("startinsert!")
           vim.api.nvim_buf_set_keymap(term.bufnr, "t", "<c-g>", "<CMD>close<CR>", opts)
@@ -535,5 +543,56 @@ return {
         end,
       }
     end
+  },
+  {
+    'niuiic/translate.nvim',
+    dependencies = { 'niuiic/core.nvim' },
+    config = function()
+      require('translate').setup({
+        output = {
+          float = {
+            max_width = 70,
+            max_height = 10,
+            close_on_cursor_move = true,
+            enter_key = "T",
+          },
+        },
+        translate = {
+          {
+            -- use :Trans start this job
+            cmd = "Trans",
+            command = "trans",
+            args = function(trans_source)
+              -- trans_source is the text you want to translate
+              return {
+                "-b",
+                -- "-e",
+                -- "google",
+                -- use proxy
+                -- "-x",
+                -- "http://127.0.0.1:10025",
+                "-t",
+                "ja",
+                -- you can filter translate source here
+                trans_source,
+              }
+            end,
+            -- how to get translate source
+            -- selection | input | clipboard
+            input = "selection",
+            -- how to output translate result
+            -- float_win | notify | clipboard | insert
+            output = { "float_win" },
+            -- format output
+            ---@type fun(output: string): string
+            format = function(output)
+              return output
+            end,
+          },
+        },
+      })
+      vim.keymap.set("v", "<c-t>", "<cmd>Trans<CR>", { silent = true })
+      vim.keymap.set("n", "<space>t", "<cmd>Trans<CR>")
+    end,
   },
 }
