@@ -1,8 +1,13 @@
 local o = vim.opt
 
 vim.cmd([[
-  hi NormalFloat guibg=#262626
+  hi NormalFloat guibg=None
+  hi FloatBorder guibg=None guifg=#444444
+  hi ActiveWindow guibg=None
+  hi InactiveWindow guibg=None
+  set winhighlight=Normal:MyNormal,NormalNC:MyNormalNC
 ]])
+
 o.fillchars = {
   vert = '│',
   vertleft  = '┤',
@@ -48,7 +53,7 @@ o.clipboard:append{'unnamedplus'}
 o.laststatus = 3
 o.cmdheight = 1
 
-vim.api.nvim_create_augroup( 'lua', {} )
+-- vim.api.nvim_create_augroup( 'lua', {} )
 -- vim.api.nvim_create_autocmd( 'bufwritepre', {
 --   group = 'lua',
 --   callback = function() print('insert enter') end
@@ -79,8 +84,6 @@ maps = {
     [';']          = ':',
     ['te']         = ':execute ":e" expand("%:h")<CR>',
     ['<C-[><C-[>'] = ':nohlsearch<CR><Esc>',
-    -- ['<C-n>']      = 'gt<CR>',
-    -- ['<C-p>']      = 'gT<CR>',
     ['j']          = 'gj',
     ['k']          = 'gk',
     ['R']          = '<Plug>(operator-replace)',
