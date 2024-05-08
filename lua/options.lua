@@ -44,20 +44,11 @@ o.clipboard:append{'unnamedplus'}
 o.laststatus = 3
 o.cmdheight = 1
 
-
-local function add(value, str, sep)
-  sep = sep or ','
-  str = str or ''
-  value = type(value) == 'table' and table.concat(value, sep) or value
-  return str ~= '' and table.concat({ value, str }, sep) or value
-end
-
-
 vim.api.nvim_create_augroup( 'lua', {} )
-vim.api.nvim_create_autocmd( 'bufwritepre', {
-  group = 'lua',
-  callback = function() print('insert enter') end
-})
+-- vim.api.nvim_create_autocmd( 'bufwritepre', {
+--   group = 'lua',
+--   callback = function() print('insert enter') end
+-- })
 
 if vim.fn.has('linux') == 1 then
   vim.g.clipboard = {

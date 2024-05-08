@@ -377,6 +377,7 @@ return {
       require('bufferline').setup {
         options = {
           separator_style = { '', '' },
+          show_buffer_icons = false,
           always_show_bufferline = true,
           show_buffer_close_icons = false,
           show_close_icon = false,
@@ -397,14 +398,14 @@ return {
         highlights = {
           background = {
             fg = '#D0D0D0',
-            bg = '#303030',
+            bg = '#3A3A3A',
           },
           buffer_selected = {
-            fg = '#7CB0FF',
+            fg = '#7BAFDA',
             bold = true,
           },
           fill = {
-            bg = '#303030',
+            bg = '#3A3A3A',
             fg = "#D0D0D0",
           },
         },
@@ -495,6 +496,34 @@ return {
       { "gy", "<cmd>GitLink<cr>", mode = { "n", "v" }, desc = "Yank git link" },
       { "gY", "<cmd>GitLink!<cr>", mode = { "n", "v" }, desc = "Open git link" },
     },
+  },
+  {
+    'b0o/incline.nvim',
+    config = function()
+      local helpers = require 'incline.helpers'
+      local devicons = require 'nvim-web-devicons'
+      require('incline').setup {
+        window = {
+          padding = 0,
+          margin = { horizontal = 0, vertical = 0 },
+        },
+        render = function(props)
+          local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ':t')
+          if filename == '' then
+            filename = '[No Name]'
+          end
+          -- local ft_icon, ft_color = devicons.get_icon_color(filename)
+          local modified = vim.bo[props.buf].modified
+          return {
+            -- ft_icon and { ' ', ft_icon, ' ', guibg = ft_color, guifg = helpers.contrast_color(ft_color) } or '',
+            ' ',
+            { filename, gui = modified and 'bold,italic' or 'bold' },
+            ' ',
+            guibg = '#3A3A3A',
+          }
+        end,
+      }
+    end
   },
   {
     'sindrets/diffview.nvim',
