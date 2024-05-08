@@ -30,8 +30,8 @@ return {
   {
     'ggandor/leap.nvim',
     config = function()
-      vim.keymap.set('n',        'm', '<Plug>(leap)')
-      vim.keymap.set('n',        'M', '<Plug>(leap-from-window)')
+      vim.keymap.set('n', 'm', '<Plug>(leap)')
+      vim.keymap.set('n', 'M', '<Plug>(leap-from-window)')
     end
   },
   {
