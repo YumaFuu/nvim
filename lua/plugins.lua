@@ -416,7 +416,7 @@ return {
           buffer_selected = {
             fg = '#D0D0D0',
             bg = 'none',
-            bold = false,
+            bold = true,
           },
           separator = {
             fg = '#3A3A3A',
