@@ -1,12 +1,14 @@
-local o = vim.opt
+vim.cmd("set winhighlight=Normal:MyNormal,NormalNC:MyNormalNC")
 
-vim.cmd([[
-  hi NormalFloat guibg=None
-  hi FloatBorder guibg=None guifg=#444444
-  hi ActiveWindow guibg=None
-  hi InactiveWindow guibg=None
-  set winhighlight=Normal:MyNormal,NormalNC:MyNormalNC
-]])
+local hl = vim.api.nvim_set_hl
+
+hl(0, 'NormalFloat', { bg=None })
+hl(0, 'FloatBorder', { bg=None, fg='#444444' })
+hl(0, 'ActiveWindow', { bg=None })
+hl(0, 'InactiveWindow', { bg=None })
+hl(0, 'LineNr', { fg='#3A3A3A' })
+
+local o = vim.opt
 
 o.fillchars = {
   vert = '│',
@@ -79,6 +81,8 @@ vim.api.nvim_create_autocmd({ "BufWritePre" }, {
   command = [[%s/\s\+$//e]],
 })
 
+
+local map = vim.api.nvim_set_keymap
 maps = {
   n = {
     [';']          = ':',

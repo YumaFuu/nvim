@@ -109,11 +109,13 @@ return {
       }
       local highlights = {
         Normal = {
-          guibg = "#262626",
+          -- guibg = "#262626",
+          guibg = None,
         },
         FloatBorder = {
           guifg = "#3A3A3A",
-          guibg = "#262626",
+          -- guibg = "#262626",
+          guibg = None,
         },
       }
 
