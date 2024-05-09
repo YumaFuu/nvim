@@ -395,43 +395,41 @@ return {
   },
   {
     'akinsho/bufferline.nvim',
-    version = "*",
     dependencies = 'nvim-tree/nvim-web-devicons',
     config = function()
       require('bufferline').setup {
         options = {
-          separator_style = { '', '' },
+          separator_style = { '│', '│' },
           show_buffer_icons = false,
-          always_show_bufferline = true,
+          always_show_bufferline = false,
           show_buffer_close_icons = false,
           show_close_icon = false,
           show_tab_indicators = false,
-          color_icons = true,
-          indicator = {
-            style = 'none',
-          },
-          -- offsets = {
-          --   {
-          --     filetype = "NvimTree",
-          --     text = "File Explorer",
-          --     text_align = "left",
-          --     separator = false,
-          --   },
-          -- },
+          color_icons = false,
+          indicator = { style = 'none' },
         },
         highlights = {
           background = {
-            fg = '#D0D0D0',
-            bg = '#3A3A3A',
+            fg = '#595959',
+            bg = 'none',
           },
           buffer_selected = {
+            fg = '#D0D0D0',
+            bg = 'none',
+            bold = false,
+          },
+          separator = {
+            fg = '#3A3A3A',
+            bg = 'none',
+          },
+          separator_selected = {
             fg = '#7BAFDA',
-            bold = true,
+            bg = 'none',
           },
-          fill = {
-            bg = '#3A3A3A',
-            fg = "#D0D0D0",
-          },
+          -- fill = {
+          --   fg = "#D0D0D0",
+          --   bg = '#3A3A3A',
+          -- },
         },
       }
       local map = vim.api.nvim_set_keymap
@@ -551,4 +549,18 @@ return {
       vim.notify = require('notify')
     end,
   },
+  {
+    'rebelot/heirline.nvim',
+    config = function()
+      require('heirline').setup({
+        statusline = { -- FileName
+          hl = { fg="#D0D0D0", bg="none" },
+          provider = function()
+            local name = vim.fn.bufname()
+            return string.gsub(name, "oil://", "")
+          end,
+        },
+      })
+    end,
+  }
 }

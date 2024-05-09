@@ -87,6 +87,7 @@ maps = {
   n = {
     [';']          = ':',
     ['te']         = ':execute ":e" expand("%:h")<CR>',
+    -- ['te']         = ':execute ":e" expand("%:h")<CR>',
     ['<C-[><C-[>'] = ':nohlsearch<CR><Esc>',
     ['j']          = 'gj',
     ['k']          = 'gk',
