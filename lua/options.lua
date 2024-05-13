@@ -85,7 +85,7 @@ vim.api.nvim_create_autocmd({ "BufWritePre" }, {
 local map = vim.api.nvim_set_keymap
 maps = {
   n = {
-    [';']          = ':',
+    -- [';']          = ':',
     ['te']         = ':execute ":e" expand("%:h")<CR>',
     -- ['te']         = ':execute ":e" expand("%:h")<CR>',
     ['<C-[><C-[>'] = ':nohlsearch<CR><Esc>',

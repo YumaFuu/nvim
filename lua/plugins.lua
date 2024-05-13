@@ -205,16 +205,33 @@ return {
       }
     end,
   },
-  {
-    'rmehri01/onenord.nvim',
-    config = function() vim.cmd("colorscheme onenord") end,
-  },
   -- {
-  --   'savq/melange',
+  --   'shaunsingh/nord.nvim',
   --   config = function()
-  --     vim.cmd([[colorscheme melange]])
+  --     vim.cmd([[colorscheme nord]])
   --   end,
   -- },
+  -- {
+  --   'ribru17/bamboo.nvim',
+  --   lazy = false,
+  --   priority = 1000,
+  --   config = function()
+  --     require('bamboo').setup {
+  --       -- optional configuration here
+  --     }
+  --     require('bamboo').load()
+  --   end,
+  -- },
+  -- {
+  --   'rmehri01/onenord.nvim',
+  --   config = function() vim.cmd("colorscheme onenord") end,
+  -- },
+  {
+    'savq/melange',
+    config = function()
+      vim.cmd([[colorscheme melange]])
+    end,
+  },
   {
    'stevearc/oil.nvim',
    config = function()
@@ -333,6 +350,7 @@ return {
           },
           exclude_filetypes = {
             oil = true,
+            conf = true,
           }
         },
         line_num = {
