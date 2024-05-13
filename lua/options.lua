@@ -1,5 +1,3 @@
-vim.cmd("set winhighlight=Normal:MyNormal,NormalNC:MyNormalNC")
-
 local hl = vim.api.nvim_set_hl
 
 hl(0, 'NormalFloat', { bg=None })
@@ -7,6 +5,9 @@ hl(0, 'FloatBorder', { bg=None, fg='#444444' })
 hl(0, 'ActiveWindow', { bg=None })
 hl(0, 'InactiveWindow', { bg=None })
 hl(0, 'LineNr', { fg='#3A3A3A' })
+hl(0, 'NotifyBackground', { bg=None })
+
+vim.cmd("set winhighlight=Normal:MyNormal,NormalNC:MyNormalNC")
 
 local o = vim.opt
 

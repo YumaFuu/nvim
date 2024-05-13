@@ -157,6 +157,25 @@ return {
       end
       vim.api.nvim_set_keymap("n", "<c-\\>", "<cmd>lua _toggleLazygitTerminal()<CR>", opts)
 
+      -- Lazysql
+      local lazysql = Terminal:new({
+        cmd = "lazysql",
+        dir = "git_dir",
+        direction = "float",
+        hidden = true,
+        close_on_exit = true,
+        highlights = highlights,
+        float_opts = float_opts,
+        on_open = function(term)
+          vim.cmd("startinsert!")
+          vim.api.nvim_buf_set_keymap(term.bufnr, "t", "<space>s", "<CMD>close<CR>", opts)
+        end,
+      })
+      function _toggleLazysqlTerminal()
+        lazysql:toggle()
+      end
+      vim.api.nvim_set_keymap("n", "<space>s", "<cmd>lua _toggleLazysqlTerminal()<CR>", opts)
+
       -- Gh Dash
       local ghDash = Terminal:new({
         cmd = "gh dash",
@@ -205,32 +224,9 @@ return {
       }
     end,
   },
-  -- {
-  --   'shaunsingh/nord.nvim',
-  --   config = function()
-  --     vim.cmd([[colorscheme nord]])
-  --   end,
-  -- },
-  -- {
-  --   'ribru17/bamboo.nvim',
-  --   lazy = false,
-  --   priority = 1000,
-  --   config = function()
-  --     require('bamboo').setup {
-  --       -- optional configuration here
-  --     }
-  --     require('bamboo').load()
-  --   end,
-  -- },
-  -- {
-  --   'rmehri01/onenord.nvim',
-  --   config = function() vim.cmd("colorscheme onenord") end,
-  -- },
   {
-    'savq/melange',
-    config = function()
-      vim.cmd([[colorscheme melange]])
-    end,
+    'rmehri01/onenord.nvim',
+    config = function() vim.cmd("colorscheme onenord") end,
   },
   {
    'stevearc/oil.nvim',
@@ -404,7 +400,32 @@ return {
   },
   {
     'stevearc/overseer.nvim',
-    opts = {},
+    config = function()
+      require('overseer').setup({
+        form = {
+          border = "rounded",
+          win_opts = {
+            winblend = 0,
+            winhighlight = 'Normal:MyNormal,NormalNC:MyNormalNC',
+          },
+        },
+        confirm = {
+          border = "rounded",
+          win_opts = {
+            winblend = 0,
+            winhighlight = 'Normal:MyNormal,NormalNC:MyNormalNC',
+          },
+        },
+        task_win = {
+          border = "rounded",
+          win_opts = {
+            winblend = 0,
+            winhighlight = 'Normal:MyNormal,NormalNC:MyNormalNC',
+          },
+        },
+      }
+    )
+    end,
   },
   { 'lewis6991/gitsigns.nvim' },
   {
@@ -565,6 +586,11 @@ return {
     'rcarriga/nvim-notify',
     config = function()
       vim.notify = require('notify')
+      vim.opt.termguicolors = true
+
+      require("notify").setup({
+        background_colour = "#000000",
+      })
     end,
   },
   {
@@ -579,6 +605,55 @@ return {
           end,
         },
       })
+      local Spacer = { provider = " " }
+
+      local function rpad(child)
+        return {
+          condition = child.condition,
+          child,
+          Spacer,
+        }
+      end
+      local function OverseerTasksForStatus(status)
+        return {
+          condition = function(self)
+            return self.tasks[status]
+          end,
+          provider = function(self)
+            return string.format("%s%d", self.symbols[status], #self.tasks[status])
+          end,
+          hl = function(self)
+            return {
+              fg = utils.get_highlight(string.format("Overseer%s", status)).fg,
+            }
+          end,
+        }
+      end
+
+      local Overseer = {
+        condition = function()
+          return package.loaded.overseer
+        end,
+        init = function(self)
+          local tasks = require("overseer.task_list").list_tasks({ unique = true })
+          local tasks_by_status = require("overseer.util").tbl_group_by(tasks, "status")
+          self.tasks = tasks_by_status
+        end,
+        static = {
+          symbols = {
+            ["CANCELED"] = " ",
+            ["FAILURE"] = "󰅚 ",
+            ["SUCCESS"] = "󰄴 ",
+            ["RUNNING"] = "󰑮 ",
+          },
+        },
+
+        rpad(OverseerTasksForStatus("CANCELED")),
+        rpad(OverseerTasksForStatus("RUNNING")),
+        rpad(OverseerTasksForStatus("SUCCESS")),
+        rpad(OverseerTasksForStatus("FAILURE")),
+      }
+
     end,
   }
 }
