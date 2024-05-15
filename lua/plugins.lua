@@ -83,15 +83,15 @@ return {
       )
     end
   },
-  {
-    "ibhagwan/fzf-lua",
-    -- optional for icon support
-    dependencies = { "nvim-tree/nvim-web-devicons" },
-    config = function()
-      -- calling `setup` is optional for customization
-      require("fzf-lua").setup({})
-    end
-  },
+  -- {
+  --   "ibhagwan/fzf-lua",
+  --   -- optional for icon support
+  --   dependencies = { "nvim-tree/nvim-web-devicons" },
+  --   config = function()
+  --     -- calling `setup` is optional for customization
+  --     require("fzf-lua").setup({})
+  --   end
+  -- },
   {
     "github/copilot.vim",
     config = function()
@@ -469,7 +469,9 @@ return {
   -- { 'lewis6991/gitsigns.nvim' },
   {
     'kevinhwang91/nvim-hlslens',
-    init = function() require('hlslens').setup() end,
+    init = function()
+      require('hlslens').setup()
+    end,
   },
   {
     'nanozuki/tabby.nvim',
@@ -695,9 +697,42 @@ return {
     end,
   },
   {
-    -- telescope
     'nvim-telescope/telescope.nvim',
-     dependencies = { 'nvim-lua/plenary.nvim' },
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    keys = {
+      { "<leader>'", ":Telescope smart_open<CR>", silent = true },
+      { "<leader>a", ":Telescope live_grep<CR>", silent = true },
+      { "<leader>l", ":Telescope current_buffer_fuzzy_find<CR>", silent = true },
+      { "<leader>p", ":Telescope commands<CR>", silent = true },
+      { "<leader>:", ":Telescope command_history<CR>", silent = true },
+      { "<leader>s", ":Telescope lsp_dynamic_workspace_symbols<CR>", silent = true },
+      { "<leader>c", ":lua require'telescope.builtin'.git_status{}<CR>", silent = true },
+    },
+    config = function()
+      vim.api.nvim_set_hl(0, "TelescopeNormal", { bg = "none" })
+      vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+      require('telescope').setup({
+        defaults = {
+          layout_config = {
+            prompt_position = "top",
+          },
+          layout_strategy = "flex",
+          sorting_strategy = "ascending",
+          mappings = {
+            i = {
+              ["<ecs>"] = require('telescope.actions').close,
+              ["<c-j>"] = require('telescope.actions').move_selection_next,
+              ["<c-k>"] = require('telescope.actions').move_selection_previous,
+            },
+            n = {
+              ["<ecs>"] = require('telescope.actions').close,
+              ["<c-j>"] = require('telescope.actions').move_selection_next,
+              ["<c-k>"] = require('telescope.actions').move_selection_previous,
+            },
+          },
+        },
+      })
+    end
   },
   {
     "danielfalk/smart-open.nvim",
@@ -709,8 +744,7 @@ return {
       "kkharji/sqlite.lua",
       -- Only required if using match_algorithm fzf
       { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
-      -- Optional.  If installed, native fzy will be used when match_algorithm is fzy
-      { "nvim-telescope/telescope-fzy-native.nvim" },
+      { "nvim-telescope/telescope.nvim" },
     },
   },
   {
@@ -723,6 +757,7 @@ return {
         ".env",
       },
     },
-  }
+  },
+  "shortcuts/no-neck-pain.nvim"
 
 }
