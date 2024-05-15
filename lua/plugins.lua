@@ -2,7 +2,34 @@ return {
   'nvim-lua/popup.nvim',
   'MunifTanjim/nui.nvim',
   'RRethy/vim-illuminate',
-  'cohama/lexima.vim',
+  -- 'cohama/lexima.vim',
+  {
+    'hrsh7th/nvim-insx',
+    config = function()
+      require('insx.preset.standard').setup()
+    end,
+  },
+  -- {
+  --   'hrsh7th/nvim-automa',
+  --   config = function()
+  --     require('automa').setup({
+  --       mapping = {
+  --         ['.'] = {
+  --           queries = {
+              -- -- for `diwi***<Esc>`
+              -- automa.query_v1({ 'n', 'no+', 'n', 'i*' }),
+              -- -- for `x`
+              -- automa.query_v1({ 'n#' }),
+              -- -- for `i***<Esc>`
+              -- automa.query_v1({ 'n', 'i*' }),
+              -- -- for `vjjj>`
+              -- automa.query_v1({ 'n', 'v*' }),
+            -- }
+          -- },
+        -- }
+      -- })
+    -- end,
+  -- },
   'kana/vim-operator-user',
   {
     'kana/vim-operator-replace',
@@ -52,7 +79,7 @@ return {
         'c',
         '<CR>',
         '<Plug>(kensaku-search-replace)<CR>',
-        {noremap = true, silent = true}
+        { noremap = true, silent = true }
       )
     end
   },
@@ -220,8 +247,12 @@ return {
           augend.date.alias["%Y/%m/%d"],
           augend.constant.alias.bool,
           augend.constant.alias.ja_weekday,
+          augend.constant.alias.alpha,
+          augend.constant.alias.Alpha,
         },
       }
+      vim.keymap.set("v", "<C-a>", require("dial.map").inc_visual("visual"), {noremap = true})
+      vim.keymap.set("v", "<C-x>", require("dial.map").dec_visual("visual"), {noremap = true})
     end,
   },
   {
@@ -400,6 +431,14 @@ return {
   },
   {
     'stevearc/overseer.nvim',
+    keys = {
+      { "<space>ee", "<cmd>OverseerToggle<cr>", desc = "Toggel" },
+      { "<space>ec", "<cmd>OverseerRunCmd<cr>", desc = "Run Command" },
+      { "<space>er", "<cmd>OverseerRun<cr>", desc = "Run Task" },
+      { "<space>eq", "<cmd>OverseerQuickAction<cr>", desc = "Quick Action" },
+      { "<space>ea", "<cmd>OverseerTaskAction<cr>", desc = "Task Action" },
+      { "<space>ei", "<cmd>OverseerInfo<cr>", desc = "Info" },
+    },
     config = function()
       require('overseer').setup({
         form = {
@@ -427,55 +466,46 @@ return {
     )
     end,
   },
-  { 'lewis6991/gitsigns.nvim' },
+  -- { 'lewis6991/gitsigns.nvim' },
   {
     'kevinhwang91/nvim-hlslens',
     init = function() require('hlslens').setup() end,
   },
   {
-    'akinsho/bufferline.nvim',
+    'nanozuki/tabby.nvim',
+    event = 'VimEnter',
     dependencies = 'nvim-tree/nvim-web-devicons',
     config = function()
-      require('bufferline').setup {
-        options = {
-          separator_style = { '│', '│' },
-          show_buffer_icons = false,
-          always_show_bufferline = false,
-          show_buffer_close_icons = false,
-          show_close_icon = false,
-          show_tab_indicators = false,
-          color_icons = false,
-          indicator = { style = 'none' },
-        },
-        highlights = {
-          background = {
-            fg = '#595959',
-            bg = 'none',
-          },
-          buffer_selected = {
-            fg = '#D0D0D0',
-            bg = 'none',
-            bold = true,
-          },
-          separator = {
-            fg = '#3A3A3A',
-            bg = 'none',
-          },
-          separator_selected = {
-            fg = '#7BAFDA',
-            bg = 'none',
-          },
-          -- fill = {
-          --   fg = "#D0D0D0",
-          --   bg = '#3A3A3A',
-          -- },
-        },
+      vim.o.showtabline = 2
+      vim.opt.sessionoptions = 'curdir,folds,globals,help,tabpages,terminal,winsize'
+
+      local theme = {
+        fill = { fg='#3A3A3A', bg='None' },
+        current_tab = { fg='#7BAFDA', bg='None' },
+        tab = { fg='#595959', bg='None' },
       }
-      local map = vim.api.nvim_set_keymap
-      local opts = { noremap = true, silent = true }
-      -- Move to previous/next
-      map('n', '<C-p>', '<Cmd>BufferLineCyclePrev<CR>', opts)
-      map('n', '<C-n>', '<Cmd>BufferLineCycleNext<CR>', opts)
+      require('tabby.tabline').set(function(line)
+        local separator = { '│', hl = { fg = '#3A3A3A', bg = 'None' }, margin = ' ' }
+
+        return {
+          line.tabs().foreach(function(tab)
+            local hl = tab.is_current() and theme.current_tab or theme.tab
+
+            return {
+              line.sep(separator, hl, theme.fill),
+              tab.number(),
+              tab.name(),
+              {
+                ' ',
+                hl = hl,
+                margin = ' ',
+              },
+              hl = hl,
+              margin = ' ',
+            }
+          end),
+        }
+      end)
     end,
   },
   { 'kevinhwang91/nvim-bqf' },
@@ -521,7 +551,7 @@ return {
           -- local ft_icon, ft_color = devicons.get_icon_color(filename)
           local modified = vim.bo[props.buf].modified
           return {
-            -- ft_icon and { ' ', ft_icon, ' ', guibg = ft_color, guifg = helpers.contrast_color(ft_color) } or '',
+            -- ft_icon and { '} ', ft_icon, ' ', guibg = ft_color, guifg = helpers.contrast_color(ft_color) } or '',
             ' ',
             { filename, gui = modified and 'bold,italic' or 'bold' },
             ' ',
@@ -596,15 +626,9 @@ return {
   {
     'rebelot/heirline.nvim',
     config = function()
-      require('heirline').setup({
-        statusline = { -- FileName
-          hl = { fg="#D0D0D0", bg="none" },
-          provider = function()
-            local name = vim.fn.bufname()
-            return string.gsub(name, "oil://", "")
-          end,
-        },
-      })
+      local conditions = require("heirline.conditions")
+      local utils = require("heirline.utils")
+
       local Spacer = { provider = " " }
 
       local function rpad(child)
@@ -654,6 +678,51 @@ return {
         rpad(OverseerTasksForStatus("FAILURE")),
       }
 
+      require('heirline').setup({
+        statusline = { -- FileName
+          Overseer,
+          Spacer,
+          {
+            hl = { fg="#D0D0D0", bg="none" },
+            provider = function()
+              local name = vim.fn.bufname()
+              return string.gsub(name, "oil://", "")
+            end,
+          },
+        },
+      })
+
     end,
+  },
+  {
+    -- telescope
+    'nvim-telescope/telescope.nvim',
+     dependencies = { 'nvim-lua/plenary.nvim' },
+  },
+  {
+    "danielfalk/smart-open.nvim",
+    branch = "0.2.x",
+    config = function()
+      require("telescope").load_extension("smart_open")
+    end,
+    dependencies = {
+      "kkharji/sqlite.lua",
+      -- Only required if using match_algorithm fzf
+      { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+      -- Optional.  If installed, native fzy will be used when match_algorithm is fzy
+      { "nvim-telescope/telescope-fzy-native.nvim" },
+    },
+  },
+  {
+    'ahmedkhalf/project.nvim',
+    opt = {
+      patterns = {
+        ".git",
+        "Makefile",
+        "package.json",
+        ".env",
+      },
+    },
   }
+
 }
