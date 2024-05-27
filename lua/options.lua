@@ -7,7 +7,9 @@ hl(0, 'InactiveWindow', { bg=None })
 hl(0, 'LineNr', { fg='#3A3A3A' })
 hl(0, 'NotifyBackground', { bg=None })
 hl(0, "TelescopeNormal", { bg=None })
-hl(0, "NormalFloat", { bg=None })
+hl(0, "HlSearchNear", { bg='#444444', fg='#7CB0FF' })
+hl(0, "HlSearchLens", { bg=None, fg='#7CB0FF' })
+hl(0, "HlSearchLensNear", { bg='None', fg='#7BAFDA' })
 
 vim.cmd("set winhighlight=Normal:MyNormal,NormalNC:MyNormalNC")
 
@@ -137,6 +139,7 @@ tnoremap <C-W><C-H>   <cmd>wincmd h<cr>
 tnoremap <C-W>h       <cmd>wincmd h<cr>
 tnoremap <C-W><C-L>   <cmd>wincmd l<cr>
 tnoremap <C-W>l       <cmd>wincmd l<cr>
+
 ]])
 
 

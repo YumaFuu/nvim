@@ -283,7 +283,7 @@ return {
           ["<C-l>"] = "actions.refresh",
           ["<CR>"] = "actions.select",
           ["<C-t>"] = "actions.select_tab",
-          ["<C-p>"] = "actions.preview",
+          ["<C-i>"] = "actions.preview",
           ["g."] = "actions.toggle_hidden",
           ["`"] = "actions.cd",
           ["~"] = "actions.tcd",
@@ -486,6 +486,11 @@ return {
     'kevinhwang91/nvim-hlslens',
     init = function()
       require('hlslens').setup()
+      vim.cmd([[
+        hi default link HlSearchNear IncSearch
+        hi default link HlSearchLens WildMenu
+        hi default link HlSearchLensNear IncSearch
+      ]])
     end,
   },
   {
