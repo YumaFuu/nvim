@@ -2,7 +2,20 @@ return {
   'nvim-lua/popup.nvim',
   'MunifTanjim/nui.nvim',
   'RRethy/vim-illuminate',
-  -- 'cohama/lexima.vim',
+  {
+    'rapan931/lasterisk.nvim',
+    config = function()
+      vim.keymap.set('n', '*', function()
+        require("lasterisk").search()
+        require('hlslens').start()
+      end)
+
+      vim.keymap.set({'n', 'x'}, 'g*', function()
+        require("lasterisk").search({ is_whole = false })
+        require('hlslens').start()
+      end)
+    end
+  },
   {
     'hrsh7th/nvim-insx',
     config = function()
@@ -270,8 +283,10 @@ return {
           ["<C-l>"] = "actions.refresh",
           ["<CR>"] = "actions.select",
           ["<C-t>"] = "actions.select_tab",
-          ["<C-m>"] = "actions.preview",
+          ["<C-p>"] = "actions.preview",
           ["g."] = "actions.toggle_hidden",
+          ["`"] = "actions.cd",
+          ["~"] = "actions.tcd",
         },
         use_default_keymaps = false,
         view_options = {
@@ -709,8 +724,6 @@ return {
       { "<leader>c", ":lua require'telescope.builtin'.git_status{}<CR>", silent = true },
     },
     config = function()
-      vim.api.nvim_set_hl(0, "TelescopeNormal", { bg = "none" })
-      vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
       require('telescope').setup({
         defaults = {
           layout_config = {

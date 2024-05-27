@@ -6,6 +6,8 @@ hl(0, 'ActiveWindow', { bg=None })
 hl(0, 'InactiveWindow', { bg=None })
 hl(0, 'LineNr', { fg='#3A3A3A' })
 hl(0, 'NotifyBackground', { bg=None })
+hl(0, "TelescopeNormal", { bg=None })
+hl(0, "NormalFloat", { bg=None })
 
 vim.cmd("set winhighlight=Normal:MyNormal,NormalNC:MyNormalNC")
 
@@ -88,17 +90,21 @@ maps = {
   n = {
     -- [';']          = ':',
     -- ['te']         = ':execute ":e" expand("%:h")<CR>',
-    ['te']         = ':execute ":tabe" expand("%:h")<CR>',
-    ['<C-[><C-[>'] = ':nohlsearch<CR><Esc>',
+    ['te']         = '<cmd>execute ":tabe" expand("%:h")<CR>',
+    ['<C-[><C-[>'] = '<cmd>noh<CR><Esc>',
+    ['C-l']        = '<cmd>noh<CR>',
+    ["<C-[><C-[>"] = '<cmd>noh<CR>',
+    ["<ECS><ECS>"] = '<cmd>noh<CR>',
     ['j']          = 'gj',
     ['k']          = 'gk',
     ['R']          = '<Plug>(operator-replace)',
     ['go']         = '<Plug>(openbrowser-smart-search)',
-    ["<C-[><C-[>"] = ':nohl<CR>',
-    ["<ECS><ECS>"] = ':nohl<CR>',
     ['<Leader>c'] = '<plug>(operator-camelize-toggle)',
     ['<C-n>'] = '<cmd>tabnext<CR>',
     ['<C-p>'] = '<cmd>tabprevious<CR>',
+    ['tt'] = '<cmd>terminal<CR>',
+    ['tv'] = '<cmd>vsplit | terminal<CR>',
+    ['ts'] = '<cmd>split | terminal<CR>',
   },
   i = {
     ['<C-h>'] = '<Left>',
@@ -114,6 +120,25 @@ for mode, _maps in pairs(maps) do
     vim.keymap.set(mode, k, v, { noremap = true, silent = true })
   end
 end
+
+vim.cmd([[
+" ターミナルを開いたらに常にinsertモードに入る
+autocmd TermOpen * :startinsert
+" ターミナルモードで行番号を非表示
+autocmd TermOpen * setlocal norelativenumber
+autocmd TermOpen * setlocal nonumber
+
+tnoremap <ESC> <C-\><C-n>
+tnoremap <C-W><C-J>   <cmd>wincmd j<cr>
+tnoremap <C-W>j       <cmd>wincmd j<cr>
+tnoremap <C-W><C-K>   <cmd>wincmd k<cr>
+tnoremap <C-W>k       <cmd>wincmd k<cr>
+tnoremap <C-W><C-H>   <cmd>wincmd h<cr>
+tnoremap <C-W>h       <cmd>wincmd h<cr>
+tnoremap <C-W><C-L>   <cmd>wincmd l<cr>
+tnoremap <C-W>l       <cmd>wincmd l<cr>
+]])
+
 
 vim.keymap.set("n", "<C-a>", require("dial.map").inc_normal(), {noremap = true})
 vim.keymap.set("n", "<C-x>", require("dial.map").dec_normal(), {noremap = true})
