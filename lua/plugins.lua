@@ -723,10 +723,9 @@ return {
       { "<leader>'", ":Telescope smart_open<CR>", silent = true },
       { "<leader>a", ":Telescope live_grep<CR>", silent = true },
       { "<leader>l", ":Telescope current_buffer_fuzzy_find<CR>", silent = true },
-      { "<leader>p", ":Telescope commands<CR>", silent = true },
+      { "<leader>c", ":Telescope commands<CR>", silent = true },
       { "<leader>:", ":Telescope command_history<CR>", silent = true },
       { "<leader>s", ":Telescope lsp_dynamic_workspace_symbols<CR>", silent = true },
-      { "<leader>c", ":lua require'telescope.builtin'.git_status{}<CR>", silent = true },
     },
     config = function()
       require('telescope').setup({
@@ -776,6 +775,12 @@ return {
       },
     },
   },
-  "shortcuts/no-neck-pain.nvim"
-
+  "shortcuts/no-neck-pain.nvim",
+  {
+    'adelarsq/image_preview.nvim',
+    event = 'VeryLazy',
+    config = function()
+      require("image_preview").setup({})
+    end
+  },
 }
