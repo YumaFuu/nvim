@@ -3,6 +3,11 @@ return {
   'MunifTanjim/nui.nvim',
   'RRethy/vim-illuminate',
   {
+    "luckasRanarison/tailwind-tools.nvim",
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    opts = {} -- your configuration
+  },
+  {
     'TobinPalmer/rayso.nvim',
     cmd = { 'Rayso' },
     config = function()
@@ -357,6 +362,20 @@ return {
   },
   'mattn/vim-goimports',
   {
+    "ray-x/go.nvim",
+    dependencies = {  -- optional packages
+      "ray-x/guihua.lua",
+      "neovim/nvim-lspconfig",
+      "nvim-treesitter/nvim-treesitter",
+    },
+    config = function()
+      require("go").setup()
+    end,
+    event = {"CmdlineEnter"},
+    ft = {"go", 'gomod'},
+    build = ':lua require("go.install").update_all_sync()' -- if you need to install/update all binaries
+  },
+  {
     'neovim/nvim-lspconfig',
   },
   {
@@ -594,7 +613,7 @@ return {
   },
   {
     'nanozuki/tabby.nvim',
-    event = 'VimEnter',
+    -- event = 'VimEnter',
     dependencies = 'nvim-tree/nvim-web-devicons',
     config = function()
       vim.o.showtabline = 2
@@ -605,28 +624,29 @@ return {
         current_tab = { fg='#7BAFDA', bg='None' },
         tab = { fg='#595959', bg='None' },
       }
-      require('tabby.tabline').set(function(line)
-        local separator = { '│', hl = { fg = '#3A3A3A', bg = 'None' }, margin = ' ' }
+      local separator = { '│', hl = { fg = '#3A3A3A', bg = 'None' }, margin = ' ' }
 
-        return {
-          line.tabs().foreach(function(tab)
-            local hl = tab.is_current() and theme.current_tab or theme.tab
-
-            return {
-              line.sep(separator, hl, theme.fill),
-              tab.number(),
-              tab.name(),
-              {
-                ' ',
+      require('tabby').setup({
+        line = function(line)
+          return {
+            line.tabs().foreach(function(tab)
+              local hl = tab.is_current() and theme.current_tab or theme.tab
+              return {
+                line.sep(separator, hl, theme.fill),
+                tab.number(),
+                tab.name(),
+                {
+                  ' ',
+                  hl = hl,
+                  margin = ' ',
+                },
                 hl = hl,
                 margin = ' ',
-              },
-              hl = hl,
-              margin = ' ',
-            }
-          end),
-        }
-      end)
+              }
+            end),
+            hl = theme.fill,
+          }
+        end})
     end,
   },
   { 'kevinhwang91/nvim-bqf' },
@@ -821,7 +841,7 @@ return {
     'nvim-telescope/telescope.nvim',
     dependencies = { 'nvim-lua/plenary.nvim' },
     keys = {
-      { "<leader>'", ":Telescope smart_open<CR>", silent = true },
+      { "<leader>'", ":lua require('telescope').extensions.smart_open.smart_open { cwd_only = true, filename_first = false }<CR>", silent = true },
       { "<leader>a", ":Telescope live_grep<CR>", silent = true },
       { "<leader>l", ":Telescope current_buffer_fuzzy_find<CR>", silent = true },
       { "<leader>c", ":Telescope commands<CR>", silent = true },
@@ -841,6 +861,15 @@ return {
               ["<ecs>"] = require('telescope.actions').close,
               ["<c-j>"] = require('telescope.actions').move_selection_next,
               ["<c-k>"] = require('telescope.actions').move_selection_previous,
+              ["<c-w>"] = function()
+                -- local actions = require('telescope.actions')
+                -- local action_state = require('telescope.actions.state')
+                local line = require('telescope.actions.state').get_current_line()
+                local cursor_pos = vim.api.nvim_win_get_cursor(0)
+                local new_line = line:sub(cursor_pos[2] + 2)
+                vim.api.nvim_feedkeys(new_line, 'n', true)
+                vim.api.nvim_win_set_cursor(0, {cursor_pos[1], 0})
+              end,
             },
             n = {
               ["<ecs>"] = require('telescope.actions').close,

@@ -130,7 +130,6 @@ autocmd TermOpen * :startinsert
 autocmd TermOpen * setlocal norelativenumber
 autocmd TermOpen * setlocal nonumber
 
-tnoremap <ESC> <C-\><C-n>
 tnoremap <C-W><C-J>   <cmd>wincmd j<cr>
 tnoremap <C-W>j       <cmd>wincmd j<cr>
 tnoremap <C-W><C-K>   <cmd>wincmd k<cr>
